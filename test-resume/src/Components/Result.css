@@ -1,0 +1,25 @@
+.winner-result{
+    background-color: #14bdac;
+    /* line-height: 1.5; */
+    display: flex;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;
+}
+.winner-text-main{
+    opacity: 1; 
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(84, 84, 84);
+    text-transform: uppercase;
+    font-family: arial,sans-serif;
+}
+.result-image{
+    width: 128px ;
+    height: 128px;
+}
+.result-image-o{
+    width: 90px ;
+    height: 128px;
+}

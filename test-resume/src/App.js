@@ -7,6 +7,7 @@ import "./App.css";
 
 // Importing the useState hook
 import { useState } from 'react';
+import Result from './Components/Result';
 
 function App() {
 
@@ -27,20 +28,18 @@ function App() {
 
 	return (
 		<div className="App">
-			{/* Shrinks the popup when there is no winner */}
-			<div className={`winner ${winner !== '' ? '' : 'shrink'}`}>
-				{/* Display the current winner */}
-				<div className='winner-text'>{winner}</div>
-				{/* Button used to reset the board */}
-				<button onClick={() => resetBoard()}>
-					Reset Board
-				</button>
-			</div>
-			{/* Custom made board component comprising of
-			the tic-tac-toe board */}
-			<Board reset={reset} setReset={setReset} winner={winner}
+			{winner!=="" &&
+			<Result reset={()=>{
+				setReset(true)
+				setWinner("")
+			}}
+			winner={winner}/>
+			}
+			{winner==="" &&
+			<>
+			 <Board reset={reset} setReset={setReset} winner={winner}
 				setWinner={setWinner} />
-			<Info />
+			<Info /></>}
 		</div>
 	);
 }

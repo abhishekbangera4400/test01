@@ -114,12 +114,12 @@ const Board = ({ reset, setReset, winner, setWinner }) => {
 
 		// Setting the winner in case of a win
 		if (checkWin()) {
-			setWinner(turn === 0 ? "Player 2 Wins!" :
-			"Player 1 Wins!");
+			setWinner(turn === 0 ? "2" :
+			"1");
 		} else if (checkTie()) {
 
 			// Setting the winner to tie in case of a tie
-			setWinner("It's a Tie!");
+			setWinner("0");
 		}
 
 	})
