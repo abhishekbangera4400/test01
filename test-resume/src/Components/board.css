@@ -1,7 +1,9 @@
 :root {
 	--board-background: none;
-	--border-color: #f6546a;
-	--border-thickness: 5px;
+	/* --stroke: #0da192;
+	--stroke-width: 7px; */
+    --stroke: #0da192;
+    --stroke-width: 8px;
 }
 
 .board{
@@ -27,50 +29,54 @@
 	font-size: 6rem;
 }
 
-.input-1{
-	border-right: var(--border-thickness)
-	dashed var(--border-color);
-	border-bottom: var(--border-thickness)
-	dashed var(--border-color);
+.input-1 {
+    animation: appear .2s cubic-bezier(0.5,1.8,0.1,1.1);
+	border-right: var(--stroke-width)
+	solid var(--stroke);
+	border-bottom: var(--stroke-width)
+	solid var(--stroke);
+    stroke: rgb(84, 84, 84);
+    stroke-dasharray: 135.764;
+    stroke-dashoffset: 0;
 }
 
 .input-2{
-	border-right: var(--border-thickness)
-	dashed var(--border-color);
-	border-bottom: var(--border-thickness)
-	dashed var(--border-color);
+	border-right: var(--stroke-width)
+	solid var(--stroke);
+	border-bottom: var(--stroke-width)
+	solid var(--stroke);
 }
 
 .input-3{
-	border-bottom: var(--border-thickness)
-	dashed var(--border-color);
+	border-bottom: var(--stroke-width)
+	solid var(--stroke);
 }
 
 .input-4{
-	border-right: var(--border-thickness)
-	dashed var(--border-color);
-	border-bottom: var(--border-thickness)
-	dashed var(--border-color);
+	border-right: var(--stroke-width)
+	solid var(--stroke);
+	border-bottom: var(--stroke-width)
+	solid var(--stroke);
 }
 
 .input-5{
-	border-right: var(--border-thickness)
-	dashed var(--border-color);
-	border-bottom: var(--border-thickness)
-	dashed var(--border-color);
+	border-right: var(--stroke-width)
+	solid var(--stroke);
+	border-bottom: var(--stroke-width)
+	solid var(--stroke);
 }
 
 .input-6{
-	border-bottom: var(--border-thickness)
-	dashed var(--border-color);
+	border-bottom: var(--stroke-width)
+	solid var(--stroke);
 }
 
 .input-7{
-	border-right: var(--border-thickness)
-	dashed var(--border-color);
+	border-right: var(--stroke-width)
+	solid var(--stroke);
 }
 
 .input-8{
-	border-right: var(--border-thickness)
-	dashed var(--border-color);
+	border-right: var(--stroke-width)
+	solid var(--stroke);
 }

@@ -1,5 +1,7 @@
 // Importing the CSS for the board
 import "./board.css";
+import O from'../Images/o-solid.svg';
+
 
 // Importing the useState hook, useEffect hook and useRef hook
 import { useState, useEffect, useRef } from "react";
