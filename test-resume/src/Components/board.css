@@ -7,8 +7,8 @@
 }
 
 .board{
-	width: 30vw;
-	height: 50%;
+	width: 600px;
+    height: 600px;
 	background-color: var(--board-background);
 	display: flex;
 	align-items: flex-start;
@@ -19,14 +19,21 @@
 .input{
 	height: 33.33%;
 	width: 33.33%;
+	transform-origin: 0 0;
+	/* transition-delay: 5s; */
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	color: whitesmoke;
-	font-family: 'Bellefair', serif;
-	font-style: italic;
+	font-family:inherit;
 	font-weight: 700;
-	font-size: 6rem;
+	font-size: 11rem;
+	will-change: transform;
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+    /* -webkit-animation: appear .2s cubic-bezier(0.5,1.8,0.1,1.1); */
+    -moz-animation: appear .2s cubic-bezier(0.5,1.8,0.1,1.1);
+    animation: appear .2s cubic-bezier(0.5,1.8,0.1,1.1);
 }
 
 .input-1 {
@@ -80,3 +87,30 @@
 	border-right: var(--stroke-width)
 	solid var(--stroke);
 }
+
+@media screen and (max-width: 960px), (max-height: 800px){
+.board{
+    width: 450px;
+    height: 450px;
+}
+.info{
+	width: 450px !important;
+}
+.input{
+	font-size: 7rem;
+}
+}
+
+@media screen and (max-width: 540px), (max-height: 630px){
+.board {
+    width: 300px;
+    height: 300px;
+}
+.info{
+	width: 300px !important;
+}
+.input{
+	font-size: 4rem;
+}
+}
+

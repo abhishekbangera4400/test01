@@ -1,6 +1,5 @@
 .info {
 	width: 40vw;
-   
 	display: flex;
 	justify-content: space-evenly;
 	align-items: center;
@@ -8,10 +7,11 @@
 }
 
 .player {
-	border: 2px solid white;
-	border-radius: 10%;
+    border-right: 2px solid white; 
+	border-image: linear-gradient(#ffffff, #d3020200) 1 ;
 	padding: 10px;
 	display: flex;
+	transition: transform .2s;
 	font-size: 1.5rem;
 	justify-content: center;
 	align-items: center;
@@ -19,6 +19,14 @@
     margin-right: 7px;
     cursor: pointer;
     height: 100%;
+}
+
+.player:hover{
+	transform: scale(1.5);
+}
+
+.br-0{
+border: none;
 }
 
 

@@ -13,8 +13,8 @@ export default function Result(props) {
   return (
     <>
     <Confetti
-      width={1900}
-      height={900}
+      width={window.innerWidth}
+      height={window.innerHeight}
     />
     <div className="winner-result" style={{flexDirection:"column"}} onClick={()=>{reset()}}>
         {winner==="1"?
