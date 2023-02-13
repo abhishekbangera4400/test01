@@ -1,9 +1,9 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Tic-Tac-Toe",
+  "name": "Tic-Tac-Toe",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "tic-tac-toe.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
@@ -13,7 +13,7 @@
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "tic-tac-toe.png",
       "type": "image/png",
       "sizes": "512x512"
     }
