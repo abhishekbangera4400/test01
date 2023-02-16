@@ -1,131 +1,172 @@
-// Importing the CSS for the board
+import { useState, useEffect, useContext, useRef } from "react";
 import "./board.css";
+import gameContext from "../gameContext";
+import gameService from "../services/gameService";
+import socketService from "../services/socketService"
 
 // Importing the useState hook, useEffect hook and useRef hook
-import { useState, useEffect, useRef } from "react";
 
-const Board = ({ reset, setReset, winner, setWinner }) => {
-  // Creating a turn state, which indicates the current turn
-  const [turn, setTurn] = useState(0);
+const Board = ({ reset, setReset, setLoaderText, setLoader }) => {
+  const [matrix, setMatrix] = useState([
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
+  ]);
+  const {
+    playerSymbol,
+    setPlayerSymbol,
+    setPlayerTurn,
+    isPlayerTurn,
+    setGameStarted,
+    isGameStarted,
+  } = useContext(gameContext);
 
-  // Creating a data state, which contains the
-  // current picture of the board
-  const [data, setData] = useState(["", "", "", "", "", "", "", "", ""]);
+  const checkGameState = (matrix) => {
+    for (let i = 0; i < matrix.length; i++) {
+      let row = [];
+      for (let j = 0; j < matrix[i].length; j++) {
+        row.push(matrix[i][j]);
+      }
 
-  // Creating a reference for the board
-  const boardRef = useRef(null);
+      if (row.every((value) => value && value === playerSymbol)) {
+        return [true, false];
+      } else if (row.every((value) => value && value !== playerSymbol)) {
+        return [false, true];
+      }
+    }
 
-  // Function to draw on the board
-  const draw = (event, index) => {
-    // Draws only if the position is not taken
-    // and winner is not decided yet
-    if (data[index - 1] === "" && winner === "") {
-      // Draws X if it's player 1's turn else draws O
-      const current = turn === 0 ? "X" : "O";
+    for (let i = 0; i < matrix.length; i++) {
+      let column = [];
+      for (let j = 0; j < matrix[i].length; j++) {
+        column.push(matrix[j][i]);
+      }
 
-      // Updating the data state
-      data[index - 1] = current;
+      if (column.every((value) => value && value === playerSymbol)) {
+        return [true, false];
+      } else if (column.every((value) => value && value !== playerSymbol)) {
+        return [false, true];
+      }
+    }
 
-      //Drawing on the board
-      event.target.innerText = current;
-      event.target.style.color =
-        turn === 0 ? "rgb(242, 235, 211)" : "rgb(84, 84, 84)";
+    if (matrix[1][1]) {
+      if (matrix[0][0] === matrix[1][1] && matrix[2][2] === matrix[1][1]) {
+        if (matrix[1][1] === playerSymbol) return [true, false];
+        else return [false, true];
+      }
 
-      // Switching the turn
-      setTurn(turn === 0 ? 1 : 0);
+      if (matrix[2][0] === matrix[1][1] && matrix[0][2] === matrix[1][1]) {
+        if (matrix[1][1] === playerSymbol) return [true, false];
+        else return [false, true];
+      }
+    }
+
+    //Check for a tie
+    if (matrix.every((m) => m.every((v) => v !== null))) {
+      return [true, true];
+    }
+
+    return [false, false];
+  };
+  const updateGameMatrix = (column, row, symbol) => {
+    const newMatrix = [...matrix];
+
+    if (newMatrix[row][column] === null || newMatrix[row][column] === "null") {
+      newMatrix[row][column] = symbol;
+      setMatrix(newMatrix);
+    }
+
+    if (socketService.socket) {
+      gameService.updateGame(socketService.socket, newMatrix);
+      const [currentPlayerWon, otherPlayerWon] = checkGameState(newMatrix);
+      if (currentPlayerWon && otherPlayerWon) {
+        gameService.gameWin(socketService.socket, "The Game is a TIE!");
+        alert("The Game is a TIE!");
+      } else if (currentPlayerWon && !otherPlayerWon) {
+        gameService.gameWin(socketService.socket, "You Lost!");
+        alert("You Won!");
+      }
+
+      setPlayerTurn(false);
     }
   };
-
-  // UseEffect hook used to reset the board whenever
-  // a winner is decided
-  useEffect(() => {
-    // Clearing the data state
-    setData(["", "", "", "", "", "", "", "", ""]);
-
-    // Getting all the children(cells) of the board
-    const cells = boardRef.current.children;
-
-    // Clearing out the board
-    for (let i = 0; i < 9; i++) {
-      cells[i].innerText = "";
-    }
-
-    // Resetting the turn to player 0
-    setTurn(0);
-
-    // Resetting the winner
-    setWinner("");
-    setReset(false);
-  }, [reset, setReset, setWinner]);
-
-  // useEffect hook used to check for a winner
-  useEffect(() => {
-    // Checks for the win condition in rows
-    const checkRow = () => {
-      let ans = false;
-      for (let i = 0; i < 9; i += 3) {
-        ans |=
-          data[i] === data[i + 1] && data[i] === data[i + 2] && data[i] !== "";
-      }
-      return ans;
-    };
-
-    // Checks for the win condition in cols
-    const checkCol = () => {
-      let ans = false;
-      for (let i = 0; i < 3; i++) {
-        ans |=
-          data[i] === data[i + 3] && data[i] === data[i + 6] && data[i] !== "";
-      }
-      return ans;
-    };
-
-    // Checks for the win condition in diagonals
-    const checkDiagonal = () => {
-      return (
-        (data[0] === data[4] && data[0] === data[8] && data[0] !== "") ||
-        (data[2] === data[4] && data[2] === data[6] && data[2] !== "")
-      );
-    };
-
-    // Checks if at all a win condition is present
-    const checkWin = () => {
-      return checkRow() || checkCol() || checkDiagonal();
-    };
-
-    // Checks for a tie
-    const checkTie = () => {
-      let count = 0;
-      data.forEach((cell) => {
-        if (cell !== "") {
-          count++;
-        }
+  const handleGameUpdate = () => {
+    if (socketService.socket)
+      gameService.onGameUpdate(socketService.socket, (newMatrix) => {
+        setMatrix(newMatrix);
+        checkGameState(newMatrix);
+        setPlayerTurn(true);
       });
-      return count === 9;
-    };
+  };
 
-    // Setting the winner in case of a win
-    if (checkWin()) {
-      setWinner(turn === 0 ? "2" : "1");
-    } else if (checkTie()) {
-      // Setting the winner to tie in case of a tie
-      setWinner("0");
-    }
-  });
+  const handleGameStart = () => {
+    console.log(socketService.socket)
+    if (socketService.socket)
+      gameService.onStartGame(socketService.socket, (options) => {
+        setGameStarted(true);
+        setPlayerSymbol(options.symbol);
+        if (options.start) setPlayerTurn(true);
+        else setPlayerTurn(false);
+      });
+  };
 
+  const handleGameWin = () => {
+    if (socketService.socket)
+      gameService.onGameWin(socketService.socket, (message) => {
+        console.log("Here", message);
+        setPlayerTurn(false);
+        alert(message);
+      });
+  };
+
+  useEffect(() => {
+    handleGameUpdate();
+    handleGameStart();
+    handleGameWin();
+  }, [])
   
 
+  useEffect(() => {
+    if(!isGameStarted){
+      setLoader(true)
+      setLoaderText("Waiting for Other Player to Join to Start the Game!")
+    }else{
+      setLoader(false)
+    }
+  }, [isGameStarted,isPlayerTurn])
+
   return (
-    <div ref={boardRef} className="board">
-      <div className="input input-1"  onClick={(e) => draw(e, 1)}></div>
-      <div className="input input-2" onClick={(e) => draw(e, 2)}></div>
-      <div className="input input-3" onClick={(e) => draw(e, 3)}></div>
-      <div className="input input-4" onClick={(e) => draw(e, 4)}></div>
-      <div className="input input-5" onClick={(e) => draw(e, 5)}></div>
-      <div className="input input-6" onClick={(e) => draw(e, 6)}></div>
-      <div className="input input-7" onClick={(e) => draw(e, 7)}></div>
-      <div className="input input-8" onClick={(e) => draw(e, 8)}></div>
-      <div className="input input-9" onClick={(e) => draw(e, 9)}></div>
+    <div className="board">
+      {!isGameStarted && (
+        <>
+        {/* <h2>Waiting for Other Player to Join to Start the Game!</h2> */}
+      </>
+      )}
+      {/* {(!isGameStarted || !isPlayerTurn) && <PlayStopper />} */}
+      {matrix.map((row, rowIdx) => {
+        return (
+          <>
+            {row.map((column, columnIdx) => (
+              <div
+              style={{color:column === "O"?"rgb(242, 235, 211)" : "rgb(84, 84, 84)",cursor:(!isGameStarted || !isPlayerTurn)?"not-allowed":""}}
+                className={`input input-${
+                  rowIdx === 2 ? columnIdx + 7 : columnIdx + 1
+                }`}
+                onClick={(e) =>{
+                  if(isGameStarted && isPlayerTurn)
+                  updateGameMatrix(columnIdx, rowIdx, playerSymbol)
+                }
+                }
+              >
+                {column && column !== "null"
+                  ? column === "x"
+                    ? "X"
+                    : "O"
+                  : null}
+              </div>
+            ))}
+          </>
+        );
+      })}
     </div>
   );
 };
