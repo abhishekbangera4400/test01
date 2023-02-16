@@ -5,7 +5,7 @@ import gameService from "../services/gameService";
 import socketService from "../services/socketService"
 import Result from "./Result";
 import Info from "./Info";
-import vsLogo from'../Images/vs.png';
+import vsLogo from'../Images/vs01.png';
 
 // Importing the useState hook, useEffect hook and useRef hook
 
@@ -85,10 +85,19 @@ const Board = ({ reset, setReset, setLoaderText, setLoader }) => {
       const [currentPlayerWon, otherPlayerWon] = checkGameState(newMatrix);
       if (currentPlayerWon && otherPlayerWon) {
         gameService.gameWin(socketService.socket, "The Game is a TIE!");
-        alert("The Game is a TIE!");
+        setMatrix([
+          [null, null, null],
+          [null, null, null],
+          [null, null, null],
+        ])
         setGameWon("xo")
       } else if (currentPlayerWon && !otherPlayerWon) {
         gameService.gameWin(socketService.socket, playerSymbol);
+        setMatrix([
+          [null, null, null],
+          [null, null, null],
+          [null, null, null],
+        ])
         setGameWon(playerSymbol)
       }
 
@@ -145,8 +154,8 @@ const Board = ({ reset, setReset, setLoaderText, setLoader }) => {
       <Result
       reset={() => {
         // setReset()
-        isGameWon(false)
-
+        setGameWon(false)
+        updateGameMatrix(1, 1, null)
         // setWinner("");
       }}
       winner={isGameWon}

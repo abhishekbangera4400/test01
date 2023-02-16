@@ -9,7 +9,7 @@ const defaultState = {
   setPlayerTurn: () => {},
   isGameStarted: false,
   setGameStarted: () => {},
-  isGameWon: "xo",
+  isGameWon: false,
   setGameWon: () => {},
   roomID: "",
   setRoomID:() => {},

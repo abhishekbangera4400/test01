@@ -9,7 +9,8 @@ import gameService from "./services/gameService";
 import "./App.css";
 import Room from "./Components/Room/Room";
 import { ColorRing } from "react-loader-spinner";
-import vsLogo from'./Images/vs.png';
+import vsLogo from'./Images/vs01.png';
+
 
 function App() {
   const [isInRoom, setInRoom] = useState(false);
@@ -52,7 +53,7 @@ function App() {
         console.log("Error: ", err);
       });
       socketService.socket.on("connect", () => {
-      console.log("connected"); // x8WIv7-mJelg7on_ALbx
+        setLoader(false);
     });
     socketService.socket.on("disconnect", () => {
       console.log("Disconnected"); // undefined
@@ -133,8 +134,10 @@ function App() {
           <div className="header-flex  w-100 ">
             <div className="header-content" style={{backgroundColor:isPlayerTurn?"#9cdf14":""}}>
             Player 1
+          
             </div>
-            <div className="vs-image" style={{padding:"10px"}}>
+          
+            <div className="vs-image" >
             <img  src={vsLogo} className="vs-image-1" alt="fireSpot"/>
   
             </div>

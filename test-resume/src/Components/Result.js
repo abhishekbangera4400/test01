@@ -28,6 +28,9 @@ export default function Result(props) {
     }
       
       <div className="winner-text-main">{winner==="xo"?"Draw!":"Winner!"}</div>
+      <div className="btn-restart">
+          <button onClick={()=>{reset()}} className="btn-restart btn-secondary">Restart</button>
+      </div>
     </div>
     </>
   );

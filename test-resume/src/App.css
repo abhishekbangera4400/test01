@@ -110,7 +110,10 @@ filter: blur(8px);
 	button {
 	padding: .75rem 1.5rem;
 	}
-};
+	
+}
+
+
 
 
 .w-100{
@@ -120,12 +123,17 @@ filter: blur(8px);
 		height: 100%;
 	}
 
-	.game-body{
+	.game-body {
 display: flex;
 flex-direction: column;
 justify-content: space-around;
 align-items: center;
-height: 60vh;
+height: 70vh;
 	}
 
-	
+
+	@media screen and (max-width: 400px){
+		.game-body {
+			height: 70vh;
+		}
+	};

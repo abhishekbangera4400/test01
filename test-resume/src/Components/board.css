@@ -120,7 +120,7 @@
 }
 .header-content{
 	color: white;
-	width: 44%;
+	width: 40%;
 	padding: 10px;
 	display: flex;
 	border: var(--stroke-width) solid var(--stroke); ;
@@ -140,8 +140,8 @@
 }
 
 .vs-image-1{
-	width: 29px;
-    height: 32px;
+	width: 34px;
+    height: 48px;
 }
 
 .w-100{
