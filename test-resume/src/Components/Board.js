@@ -3,6 +3,9 @@ import "./board.css";
 import gameContext from "../gameContext";
 import gameService from "../services/gameService";
 import socketService from "../services/socketService"
+import Result from "./Result";
+import Info from "./Info";
+import vsLogo from'../Images/vs.png';
 
 // Importing the useState hook, useEffect hook and useRef hook
 
@@ -19,6 +22,8 @@ const Board = ({ reset, setReset, setLoaderText, setLoader }) => {
     isPlayerTurn,
     setGameStarted,
     isGameStarted,
+    isGameWon,
+    setGameWon
   } = useContext(gameContext);
 
   const checkGameState = (matrix) => {
@@ -81,9 +86,10 @@ const Board = ({ reset, setReset, setLoaderText, setLoader }) => {
       if (currentPlayerWon && otherPlayerWon) {
         gameService.gameWin(socketService.socket, "The Game is a TIE!");
         alert("The Game is a TIE!");
+        setGameWon("xo")
       } else if (currentPlayerWon && !otherPlayerWon) {
-        gameService.gameWin(socketService.socket, "You Lost!");
-        alert("You Won!");
+        gameService.gameWin(socketService.socket, playerSymbol);
+        setGameWon(playerSymbol)
       }
 
       setPlayerTurn(false);
@@ -102,6 +108,7 @@ const Board = ({ reset, setReset, setLoaderText, setLoader }) => {
     console.log(socketService.socket)
     if (socketService.socket)
       gameService.onStartGame(socketService.socket, (options) => {
+        setGameWon(false)
         setGameStarted(true);
         setPlayerSymbol(options.symbol);
         if (options.start) setPlayerTurn(true);
@@ -112,9 +119,8 @@ const Board = ({ reset, setReset, setLoaderText, setLoader }) => {
   const handleGameWin = () => {
     if (socketService.socket)
       gameService.onGameWin(socketService.socket, (message) => {
-        console.log("Here", message);
         setPlayerTurn(false);
-        alert(message);
+        setGameWon(message)
       });
   };
 
@@ -135,6 +141,19 @@ const Board = ({ reset, setReset, setLoaderText, setLoader }) => {
   }, [isGameStarted,isPlayerTurn])
 
   return (
+    isGameWon?
+      <Result
+      reset={() => {
+        // setReset()
+        isGameWon(false)
+
+        // setWinner("");
+      }}
+      winner={isGameWon}
+    />
+      :
+      <>
+      
     <div className="board">
       {!isGameStarted && (
         <>
@@ -147,7 +166,7 @@ const Board = ({ reset, setReset, setLoaderText, setLoader }) => {
           <>
             {row.map((column, columnIdx) => (
               <div
-              style={{color:column === "O"?"rgb(242, 235, 211)" : "rgb(84, 84, 84)",cursor:(!isGameStarted || !isPlayerTurn)?"not-allowed":""}}
+              style={{color:column === "x"?"rgb(84, 84, 84)" : "rgb(242, 235, 211)",cursor:(!isGameStarted || !isPlayerTurn)?"not-allowed":""}}
                 className={`input input-${
                   rowIdx === 2 ? columnIdx + 7 : columnIdx + 1
                 }`}
@@ -168,6 +187,7 @@ const Board = ({ reset, setReset, setLoaderText, setLoader }) => {
         );
       })}
     </div>
+    </>
   );
 };
 

@@ -4,10 +4,11 @@
 .App{
 	width: 100vw;
 	height: 100vh;
-	display: flex;
+	padding: 8px;
+	/* display: flex;
 	justify-content: center;
 	align-items: center;
-	flex-direction: column;
+	flex-direction: column; */
 	gap: 5vh;
 	backdrop-filter: 5px;
 	background-color:#14bdac;
@@ -112,3 +113,19 @@ filter: blur(8px);
 };
 
 
+.w-100{
+	width: 100%;
+	}
+	.h-100{
+		height: 100%;
+	}
+
+	.game-body{
+display: flex;
+flex-direction: column;
+justify-content: space-around;
+align-items: center;
+height: 60vh;
+	}
+
+	

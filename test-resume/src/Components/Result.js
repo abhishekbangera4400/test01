@@ -17,9 +17,9 @@ export default function Result(props) {
       height={window.innerHeight}
     />
     <div className="winner-result" style={{flexDirection:"column"}} onClick={()=>{reset()}}>
-        {winner==="1"?
+        {winner==="x"?
   <img className="result-image" src={xxx} alt="fireSpot"/>
-        :winner==="2"?
+        :winner==="o"?
         <img className="result-image-o" src={ooo} alt="fireSpot"/>:
         <div className="draw">
         <img className="result-image" src={xxx} alt="fireSpot"/>
@@ -27,7 +27,7 @@ export default function Result(props) {
         </div>
     }
       
-      <div className="winner-text-main">{winner==="0"?"Draw!":"Winner!"}</div>
+      <div className="winner-text-main">{winner==="xo"?"Draw!":"Winner!"}</div>
     </div>
     </>
   );

@@ -23,8 +23,8 @@ if(regexOnlyNumber.test(value)){
   return (
     <>
       <h1 className="title-game">TIC TAC TOE</h1>
-      <div className="container">
-        <div className="container__item">
+      <div className="container w-100">
+        <div className="container__item" w-100>
           <form className="form">
             <input
               type="email"

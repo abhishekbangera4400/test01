@@ -1,25 +1,25 @@
 // Importing the required components
 import React, { useEffect, useState } from "react";
 import Board from "./Components/Board";
-import Info from "./Components/Info";
 import socketService from "./services/socketService";
 import GameContext from "./gameContext";
 import gameService from "./services/gameService";
 
 // Importing the CSS File
 import "./App.css";
-import Result from "./Components/Result";
 import Room from "./Components/Room/Room";
 import { ColorRing } from "react-loader-spinner";
+import vsLogo from'./Images/vs.png';
 
 function App() {
   const [isInRoom, setInRoom] = useState(false);
   const [playerSymbol, setPlayerSymbol] = useState("x");
   const [isPlayerTurn, setPlayerTurn] = useState(false);
   const [isGameStarted, setGameStarted] = useState(false);
+  const [isGameWon, setGameWon] = useState(false);
   const [loader, setLoader] = useState(true);
   const [loaderText, setLoaderText] = useState("");
-
+  const [roomID, setRoomID] = useState("")
 
   const [roomName, setRoomName] = useState("123");
   const [isJoining, setJoining] = useState(false);
@@ -60,12 +60,11 @@ function App() {
   };
 
   useEffect(() => {
-    if (!socketService.socket) connectSocket();
+    if (!socketService.socket) {connectSocket()}
   }, []);
 
   const joinRoom = async (value) => {
     // e.preventDefault();
-
     const socket = socketService.socket;
     if (!value || value.trim() === "" || !value) return;
 
@@ -76,8 +75,19 @@ function App() {
       .catch((err) => {
         alert(err);
       });
+     //load start game
+        if (socketService.socket)
+          gameService.onStartGame(socketService.socket, (options) => {
+            setGameStarted(true);
+            setPlayerSymbol(options.symbol);
+            if (options.start) setPlayerTurn(true);
+            else setPlayerTurn(false);
+          });
 
-    if (joined) setInRoom(true);
+    if (joined){
+      setInRoom(true);
+      setRoomID(value)
+    } 
 
     setJoining(false);
   };
@@ -91,7 +101,13 @@ function App() {
     setPlayerTurn,
     isGameStarted,
     setGameStarted,
+    isGameWon,
+    setGameWon,
+    roomID,
+    setRoomID
   };
+
+
 
   return (
     <GameContext.Provider value={gameContextValue}>
@@ -110,31 +126,37 @@ function App() {
       </div>}
       <div className={`App ${loader?"bg-blur":""}`}>
         {isInRoom ? (
-          <>
-            {winner !== "" && (
-              <Result
-                reset={() => {
-                  setReset(true);
-                  setWinner("");
-                }}
-                winner={winner}
-              />
-            )}
-            {winner === "" && (
-              <>
+          <div className="game-main-wrapper w-100 h-100">
+            {!isGameWon &&
+          <div className="header  w-100 ">
+          <div className="header-container  w-100 ">
+          <div className="header-flex  w-100 ">
+            <div className="header-content" style={{backgroundColor:isPlayerTurn?"#9cdf14":""}}>
+            Player 1
+            </div>
+            <div className="vs-image" style={{padding:"10px"}}>
+            <img  src={vsLogo} className="vs-image-1" alt="fireSpot"/>
+  
+            </div>
+            <div className="header-content" style={{backgroundColor:isPlayerTurn?"":"#9cdf14"}}>
+            Player 2
+              </div>
+            </div>
+          </div>
+        </div>
+}
+                <div className="game-body w-100">
                 <Board
                   reset={reset}
-                  setReset={setReset}
+                  setReset={()=>{joinRoom(roomID)}}
                   winner={winner}
                   setWinner={setWinner}
                   socketService={socketService}
                   setLoader={setLoader}
                   setLoaderText={setLoaderText}
                 />
-                <Info />
-              </>
-            )}
-          </>
+          </div>
+          </div>
         ) : (
           <>
             <Room joinRoom={joinRoom} />
