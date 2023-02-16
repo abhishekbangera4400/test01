@@ -92,6 +92,14 @@ a {
   }
 }
 
+@media screen and (max-width: 540px), (max-height: 630px){
+.form { 
+  &__field {
+    width: 342px;
+  }
+}
+}
+
 .title-game {
 	padding: 10px;
     font-size: 89px;
